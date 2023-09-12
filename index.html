@@ -55,7 +55,6 @@
     let selectedBank = null;
     let flag = true;
     let selectId;
-    let visible = false;
     function renderBank() {
         let bankStr = "";
         bank.map((e, i) => {
@@ -74,9 +73,9 @@
                     <th class="col-1">
                         <img src="${e.img}" alt="">    
                     </th>
-                    <th class="col-2">${visible ? e.number : e.number.slice(0, 7) + "*".repeat(7) + e.number.slice(14, e.number.length)}</th>
+                    <th class="col-2">${e.visible ? e.number : e.number.slice(0, 7) + "*".repeat(7) + e.number.slice(14, e.number.length)}</th>
                     <th class="col-2">${e.date}</th>
-                    <th class="col-2">${visible ? e.code : "*".repeat(e.code.length)}</th>
+                    <th class="col-2">${e.visible ? e.code : "*".repeat(e.code.length)}</th>
                     <th class="col-3">
                         <div>
                             <button class="th-btn" onclick="viewCard(${e.id})">View</button>    
@@ -103,7 +102,8 @@
             number: number,
             date: month,
             code: ccv,
-            id: uuId()
+            id: uuId(),
+            visible: false
         }
         if (flag) {
             cards.push(obj);
@@ -118,9 +118,9 @@
                 number: number,
                 date: month,
                 code: ccv,
-                id: selectId
+                id: selectId,
+                visible: false
             }
-            console.log(obj);
             for (let i = 0; i < cards.length; i++) {
                 if (cards[i].id == selectId) {
                     cards.splice(i, 1, obj);
@@ -155,9 +155,13 @@
             }
         }
     }
-    function viewCard() {
-        visible = !visible;
-        renderTable(cards);
+    function viewCard(e) {
+        for (let i = 0; i < cards.length; i++) {
+            if (cards[i].id == e) {
+                cards[i].visible = !cards[i].visible;
+                renderTable(cards);
+            }
+        }
     }
     renderBank();
     renderTable();
