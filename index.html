@@ -53,9 +53,9 @@
     let bank = ['/img/mastercard.jpg', '/img/paypal.jpg', '/img/visa.jpg', '/img/express.jpg', '/img/discover.jpg'];
     let cards = [];
     let selectedBank = null;
-    let visible = false;
-    let flag = false;
+    let flag = true;
     let selectId;
+    let visible = false;
     function renderBank() {
         let bankStr = "";
         bank.map((e, i) => {
@@ -74,9 +74,9 @@
                     <th class="col-1">
                         <img src="${e.img}" alt="">    
                     </th>
-                    <th class="col-2">${e.number}</th>
+                    <th class="col-2">${visible ? e.number : e.number.slice(0, 7) + "*".repeat(7) + e.number.slice(14, e.number.length)}</th>
                     <th class="col-2">${e.date}</th>
-                    <th class="col-2">${e.code}</th>
+                    <th class="col-2">${visible ? e.code : "*".repeat(e.code.length)}</th>
                     <th class="col-3">
                         <div>
                             <button class="th-btn" onclick="viewCard(${e.id})">View</button>    
@@ -98,21 +98,13 @@
         let number = document.getElementById("number").value;
         let month = document.getElementById("month").value;
         let ccv = document.getElementById("ccv").value;
-        let numberHidden = number.slice(0, 7) + "*".repeat(7) + number.slice(14, number.length);
-        let ccvHidden = "*".repeat(ccv.length);
         let obj = {
             img: bank[selectedBank],
-            number: numberHidden,
+            number: number,
             date: month,
-            code: ccvHidden,
+            code: ccv,
             id: uuId()
         }
-        cards.push(obj);
-        renderTable(cards);
-        document.getElementById("number").value = "";
-        document.getElementById("month").value = "";
-        document.getElementById("ccv").value = "";
-        choseNh(null);
         if (flag) {
             cards.push(obj);
             renderTable(cards);
@@ -128,6 +120,7 @@
                 code: ccv,
                 id: selectId
             }
+            console.log(obj);
             for (let i = 0; i < cards.length; i++) {
                 if (cards[i].id == selectId) {
                     cards.splice(i, 1, obj);
@@ -149,18 +142,6 @@
         cards.splice(index, 1);
         renderTable(cards);
     }
-    // function viewCard(e) {
-    //     visible = !visible;
-    //     let index = cards.findIndex(i => i.id == e);
-    //     if(visible) {
-    //         cards[index].number = number;
-    //         cards[index].ccv = ccv;
-    //     } else {
-    //         cards[index].number = numberHidden;
-    //         cards[index].ccv = ccvHidden;
-    //     }
-    //     renderTable();
-    // }
     function updateCard(id) {
         flag = false;
         for (let i = 0; i < cards.length; i++) {
@@ -169,8 +150,14 @@
                 document.getElementById("month").value = cards[i].date;
                 document.getElementById("ccv").value = cards[i].code;
                 selectId = cards[i].id;
+                let index = bank.findIndex(e => e == cards[i].img);
+                choseNh(index);
             }
         }
+    }
+    function viewCard() {
+        visible = !visible;
+        renderTable(cards);
     }
     renderBank();
     renderTable();
