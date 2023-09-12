@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<style>
+</style>
+
+<body>
+    <div class="all">
+        <h1>Select Card</h1>
+        <div id="choose-bank" class="choose-bank"></div>
+        <div class="stick"></div>
+        <div>
+            <form action="">
+                <label for="number">Card number</label> <br>
+                <input type="text" id="number" placeholder="Card number"> <br>
+                <div class="date-code">
+                    <div class="date-code1">
+                        <label for="date">Expiry Date</label> <br>
+                        <input type="text" class="monthYear" placeholder="MM/YY" id="month" />
+                    </div>
+                    <div class="date-code2">
+                        <label for="code">CVC/CVV</label> <br>
+                        <input type="text" class="cvc" placeholder="****" id="ccv">
+                    </div>
+                </div>
+                <button class="save-btn" onclick="saveBtn(event)">Save</button>
+            </form>
+        </div>
+        <div class="table">
+            <table>
+                <thead>
+                    <tr>
+                        <th class="col-1">Card Img</th>
+                        <th class="col-2">Card Number</th>
+                        <th class="col-2">Expiry Date</th>
+                        <th class="col-2">CVV</th>
+                        <th class="col-3">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="list-card">
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+<script>
+    let bank = ['/img/mastercard.jpg', '/img/paypal.jpg', '/img/visa.jpg', '/img/express.jpg', '/img/discover.jpg'];
+    let cards = [];
+    let selectedBank = null;
+    let visible = false;
+    let flag = false;
+    let selectId;
+    function renderBank() {
+        let bankStr = "";
+        bank.map((e, i) => {
+            let flag = i === selectedBank;
+            bankStr += `<button class="btn-bank ${flag ? 'choose' : ''}" onclick="choseNh(${i})">
+                    <img src="${e}" alt="">
+                </button>`;
+        })
+        document.getElementById("choose-bank").innerHTML = bankStr;
+    }
+    function renderTable() {
+        let str = '';
+        cards.map((e, i) => {
+            str += `
+                <tr>
+                    <th class="col-1">
+                        <img src="${e.img}" alt="">    
+                    </th>
+                    <th class="col-2">${e.number}</th>
+                    <th class="col-2">${e.date}</th>
+                    <th class="col-2">${e.code}</th>
+                    <th class="col-3">
+                        <div>
+                            <button class="th-btn" onclick="viewCard(${e.id})">View</button>    
+                            <button class="th-btn" onclick="updateCard(${e.id})">Edit</button>    
+                            <button class="th-btn" onclick="deleteCard(${e.id})">Delete</button>    
+                        </div>    
+                    </th>
+                </tr>
+            `
+        })
+        document.getElementById("list-card").innerHTML = str;
+    }
+    function choseNh(value) {
+        selectedBank = selectedBank === value ? null : value;
+        renderBank();
+    }
+    function saveBtn(event) {
+        event.preventDefault();
+        let number = document.getElementById("number").value;
+        let month = document.getElementById("month").value;
+        let ccv = document.getElementById("ccv").value;
+        let numberHidden = number.slice(0, 7) + "*".repeat(7) + number.slice(14, number.length);
+        let ccvHidden = "*".repeat(ccv.length);
+        let obj = {
+            img: bank[selectedBank],
+            number: numberHidden,
+            date: month,
+            code: ccvHidden,
+            id: uuId()
+        }
+        cards.push(obj);
+        renderTable(cards);
+        document.getElementById("number").value = "";
+        document.getElementById("month").value = "";
+        document.getElementById("ccv").value = "";
+        choseNh(null);
+        if (flag) {
+            cards.push(obj);
+            renderTable(cards);
+            document.getElementById("number").value = "";
+            document.getElementById("month").value = "";
+            document.getElementById("ccv").value = "";
+            choseNh(null);
+        } else {
+            obj = {
+                img: bank[selectedBank],
+                number: number,
+                date: month,
+                code: ccv,
+                id: selectId
+            }
+            for (let i = 0; i < cards.length; i++) {
+                if (cards[i].id == selectId) {
+                    cards.splice(i, 1, obj);
+                    renderTable(cards);
+                    flag = true;
+                    document.getElementById("number").value = "";
+                    document.getElementById("month").value = "";
+                    document.getElementById("ccv").value = "";
+                    choseNh(null);
+                }
+            }
+        }
+    }
+    const uuId = () => {
+        return Math.floor(Math.random() * 1000000) + new Date().getMilliseconds();
+    }
+    function deleteCard(e) {
+        let index = cards.findIndex(i => i.id == e);
+        cards.splice(index, 1);
+        renderTable(cards);
+    }
+    // function viewCard(e) {
+    //     visible = !visible;
+    //     let index = cards.findIndex(i => i.id == e);
+    //     if(visible) {
+    //         cards[index].number = number;
+    //         cards[index].ccv = ccv;
+    //     } else {
+    //         cards[index].number = numberHidden;
+    //         cards[index].ccv = ccvHidden;
+    //     }
+    //     renderTable();
+    // }
+    function updateCard(id) {
+        flag = false;
+        for (let i = 0; i < cards.length; i++) {
+            if (cards[i].id == id) {
+                document.getElementById("number").value = cards[i].number;
+                document.getElementById("month").value = cards[i].date;
+                document.getElementById("ccv").value = cards[i].code;
+                selectId = cards[i].id;
+            }
+        }
+    }
+    renderBank();
+    renderTable();
+</script>
+
+</html>

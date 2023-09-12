@@ -1,0 +1,122 @@
+.all {
+    padding: 0 150px;
+    max-width: 100%;
+}
+
+.choose-bank {
+    display: flex;
+    width: 100%;
+}
+
+.btn-bank {
+    width: 100%;
+    height: 120px;
+    padding: 10px;
+    margin-right: 25px;
+    border-radius: 20px;
+    background-color: white;
+    border: 1px solid grey;
+}
+
+.btn-bank:hover {
+    cursor: pointer;
+}
+
+.choose {
+    border: 1px solid rgb(36, 36, 231);
+    box-shadow: 0px 0px 2px 2px rgb(108, 108, 228);
+}
+
+img {
+    width: 100%;
+    height: 100%;
+}
+
+.stick {
+    border: 1px solid rgb(242, 240, 240);
+    width: 100%;
+    margin: 50px 0;
+}
+
+form {
+    width: 80%;
+}
+
+.date-code {
+    display: flex;
+    gap: 10px;
+    max-width: 100%;
+}
+
+input {
+    border-radius: 10px;
+    border: 2px solid rgb(200, 200, 200);
+    padding: 10px;
+    margin: 20px 0;
+    outline: none;
+    width: 90%;
+}
+
+input:focus {
+    border: 2px solid rgb(28, 43, 249);
+    border-radius: 10px;
+}
+
+.date-code1,
+.date-code2 {
+    width: 50%;
+}
+
+.monthYear,
+.cvc {
+    width: 80% !important;
+}
+
+.save-btn {
+    margin: 20px 0;
+    padding: 10px 25px;
+    border-radius: 50px;
+    background-color: rgb(90, 90, 225);
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+}
+
+.table {
+    margin-top: 30px;
+}
+
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td,
+th {
+    border: 1px solid #dddddd;
+    text-align: center;
+    padding: 8px;
+}
+tr {
+    width: 100%;
+    text-align: center;
+}
+.col-1 {
+    width: 20%;
+}
+.col-2 {
+    width: 18%;
+}
+.col-3 {
+    width: 100%;
+}
+.th-btn {
+    padding: 10px 20px;
+    cursor: pointer;
+    border: none;
+}
+.th-btn:hover {
+    background-color: aquamarine;
+}
